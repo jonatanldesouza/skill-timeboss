@@ -1,0 +1,13 @@
+# dependencias
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# saida do ASK CLI
+.alexa/
+.lambda/
+*.zip
+
+# sistema
+.DS_Store
+Thumbs.db

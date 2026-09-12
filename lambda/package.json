@@ -1,0 +1,23 @@
+{
+  "name": "timeboss-alexa-skill",
+  "version": "1.0.0",
+  "description": "Skill da Alexa que lista os times boss do Priston Tale Brasil (TioLeoBPT) e cria lembretes no minuto de cada time.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ../tools/selftest.js",
+    "icons": "node ../tools/make-icons.js",
+    "setup": "node ../tools/publish-setup.js",
+    "publish:git": "node ../tools/git-publish.js"
+  },
+  "dependencies": {
+    "ask-sdk-core": "^2.14.0",
+    "ask-sdk-model": "^1.86.0"
+  },
+  "keywords": [
+    "alexa",
+    "skill",
+    "priston tale",
+    "time boss"
+  ],
+  "license": "MIT"
+}

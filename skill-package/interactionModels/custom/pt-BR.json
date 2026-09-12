@@ -1,0 +1,275 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "time boss",
+      "intents": [
+        {
+          "name": "ConsultarTimesIntent",
+          "slots": [
+            {
+              "name": "servidor",
+              "type": "SERVIDORES"
+            }
+          ],
+          "samples": [
+            "times boss do {servidor}",
+            "times boss {servidor}",
+            "times do {servidor}",
+            "os times do {servidor}",
+            "quais os times do {servidor}",
+            "quais os times boss do {servidor}",
+            "me fala os times do {servidor}",
+            "me diz os times boss do {servidor}",
+            "tabela do {servidor}",
+            "tabela de times do {servidor}"
+          ]
+        },
+        {
+          "name": "ConsultarTimeIntent",
+          "slots": [
+            {
+              "name": "time",
+              "type": "TIMES"
+            },
+            {
+              "name": "servidor",
+              "type": "SERVIDORES"
+            }
+          ],
+          "samples": [
+            "que horas e o time {time}",
+            "que horas e o time {time} no {servidor}",
+            "qual o horario do time {time}",
+            "qual o horario do time {time} no {servidor}",
+            "horario do {time}",
+            "horario do {time} do {servidor}",
+            "que horas e o {time} no {servidor}",
+            "qual o minuto do {time} do {servidor}"
+          ]
+        },
+        {
+          "name": "ListarServidoresIntent",
+          "slots": [],
+          "samples": [
+            "quais os servidores",
+            "quais servidores tem",
+            "lista os servidores",
+            "me fala os servidores",
+            "servidores disponiveis",
+            "quais servidores voce tem"
+          ]
+        },
+        {
+          "name": "ProximosBossesIntent",
+          "slots": [
+            {
+              "name": "servidor",
+              "type": "SERVIDORES"
+            }
+          ],
+          "samples": [
+            "quais os proximos bosses",
+            "proximos bosses",
+            "quais os proximos bosses do {servidor}",
+            "proximos bosses no {servidor}",
+            "qual o proximo boss",
+            "qual o proximo boss do {servidor}",
+            "quando nasce o proximo boss do {servidor}"
+          ]
+        },
+        {
+          "name": "CriarLembreteIntent",
+          "slots": [
+            {
+              "name": "time",
+              "type": "TIMES"
+            },
+            {
+              "name": "servidor",
+              "type": "SERVIDORES"
+            }
+          ],
+          "samples": [
+            "me lembra do time {time} do {servidor}",
+            "me lembra do time {time} no {servidor}",
+            "me lembra do {time} do {servidor}",
+            "cria um lembrete do time {time} do {servidor}",
+            "cria um lembrete do {time} no {servidor}",
+            "cria lembrete do time {time} no {servidor}",
+            "me avisa o time {time} do {servidor}",
+            "me avisa quando for o time {time} do {servidor}",
+            "quero um lembrete do time {time} do {servidor}",
+            "ativa o lembrete do time {time} no {servidor}"
+          ]
+        },
+        {
+          "name": "AtualizarLembretesIntent",
+          "slots": [],
+          "samples": [
+            "atualiza os lembretes",
+            "atualiza meus lembretes",
+            "atualiza os lembretes de time boss",
+            "atualiza os lembretes de time boss de hoje",
+            "sincroniza os lembretes",
+            "sincroniza os lembretes de time boss"
+          ]
+        },
+        {
+          "name": "ListarLembretesIntent",
+          "slots": [],
+          "samples": [
+            "quais lembretes eu tenho",
+            "meus lembretes",
+            "lista os lembretes",
+            "lista meus lembretes",
+            "quais os lembretes de time boss"
+          ]
+        },
+        {
+          "name": "RemoverLembreteIntent",
+          "slots": [
+            {
+              "name": "time",
+              "type": "TIMES"
+            },
+            {
+              "name": "servidor",
+              "type": "SERVIDORES"
+            }
+          ],
+          "samples": [
+            "remove o lembrete do time {time} do {servidor}",
+            "cancela o lembrete do time {time} do {servidor}",
+            "apaga o lembrete do time {time} no {servidor}",
+            "remove os lembretes do {servidor}",
+            "cancela os lembretes do {servidor}",
+            "apaga os lembretes de time boss do {servidor}",
+            "apaga todos os lembretes",
+            "remove todos os lembretes",
+            "cancela todos os lembretes de time boss"
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "slots": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "slots": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "slots": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "slots": []
+        }
+      ],
+      "types": [
+        {
+          "name": "SERVIDORES",
+          "values": [
+            {
+              "name": {
+                "value": "awell",
+                "synonyms": [
+                  "auel",
+                  "a well",
+                  "avell"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "migal",
+                "synonyms": [
+                  "migau",
+                  "migá"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "midranda",
+                "synonyms": [
+                  "midrandá",
+                  "midrando"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "cronus",
+                "synonyms": [
+                  "cronos",
+                  "cronu"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "idhas",
+                "synonyms": [
+                  "idas",
+                  "idás",
+                  "i das"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "TIMES",
+          "values": [
+            {
+              "name": {
+                "value": "omega",
+                "synonyms": [
+                  "ômega",
+                  "oméga"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "gama"
+              }
+            },
+            {
+              "name": {
+                "value": "delta"
+              }
+            },
+            {
+              "name": {
+                "value": "alfa",
+                "synonyms": [
+                  "alpha",
+                  "alpa"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "zeta",
+                "synonyms": [
+                  "zêta",
+                  "seta"
+                ]
+              }
+            },
+            {
+              "name": {
+                "value": "beta",
+                "synonyms": [
+                  "bêta"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

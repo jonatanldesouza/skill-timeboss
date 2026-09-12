@@ -1,0 +1,61 @@
+{
+  "manifest": {
+    "manifestVersion": "1.0",
+    "publishingInformation": {
+      "isAvailableWorldwide": false,
+      "distributionCountries": [
+        "BR"
+      ],
+      "automaticDistribution": {
+        "isActive": false
+      },
+      "testingInstructions": "Diga: abrir time boss. Depois tente: times boss do Awell. Para lembretes: me lembra do time Gama do Awell. Para atualizar os horarios do dia: atualiza os lembretes.",
+      "category": "GAMES",
+      "locales": {
+        "pt-BR": {
+          "name": "Time Boss Tio Leo",
+          "summary": "Veja os times boss do Priston Tale Brasil e receba lembretes no minuto de cada time.",
+          "description": "Skill nao oficial que mostra os horarios dos times boss dos servidores Awell, Migal, Midranda, Cronus e Idhas, usando como base os dados publicos do site tioleobpt.com.br.\n\nPergunte por voz: \"times boss do Awell\" e ouça a lista completa dos times em ordem. Pergunte \"que horas e o time Gama no Awell\" para saber o minuto exato.\n\nVoce tambem pode criar lembretes: \"me lembra do time Gama do Awell\" e a Alexa avisa a cada hora, no minuto do time. Como os times mudam todos os dias, diga \"atualiza os lembretes\" para sincronizar com a tabela do dia.",
+          "examplePhrases": [
+            "Alexa, abrir time boss",
+            "times boss do Awell",
+            "me lembra do time Gama do Awell"
+          ],
+          "keywords": [
+            "priston tale",
+            "time boss",
+            "boss",
+            "servidor",
+            "tio leo"
+          ]
+        }
+      }
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "sourceDir": "lambda"
+        },
+        "interfaces": []
+      }
+    },
+    "permissions": [
+      {
+        "name": "alexa::alerts:reminders:skill:readwrite"
+      }
+    ],
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "usesPersonalInfo": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "containsAds": false,
+      "locales": {
+        "pt-BR": {
+          "privacyPolicyUrl": "https://jonatanldesouza.github.io/skill-timeboss/privacy-policy.html",
+          "termsOfUseUrl": "https://jonatanldesouza.github.io/skill-timeboss/terms-of-use.html"
+        }
+      }
+    }
+  }
+}
