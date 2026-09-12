@@ -130,6 +130,10 @@ dimensões certas, páginas legais, permissão de lembretes no manifest, locale
 1. Crie a skill no [Alexa Developer Console](https://developer.amazon.com/alexa/console/ask)
    → **Create Skill** → nome *Time Boss Tio Leo* → idioma **Português (BR)** →
    modelo **Custom** → hospedagem **Alexa-hosted (Node.js)** → template **Start from scratch**.
+   > Se o menu **Code** mostrar *"The code editor only works with an Alexa-hosted skill"*, a
+   > skill foi criada como *Provision your own*: clique em **Convert to Alexa-hosted** e
+   > escolha a região **US East (N. Virginia)** (recomendada para pt-BR) — veja a *Opção 0* da
+   > Parte 6 do `PUBLICAR.md`.
 2. Em **Build → Interaction Model → JSON Editor**, cole o conteúdo de
    `skill-package/interactionModels/custom/pt-BR.json` e clique **Save Model → Build Model**.
 3. Em **TOOLS → Permissions**, ligue **Reminders**.

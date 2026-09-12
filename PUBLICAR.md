@@ -175,7 +175,11 @@ Para voltar atrás: `node tools\publish-setup.js --reset`
 4. **Choose a type of experience:** **Other** → **Custom** → **Next**
 5. **Choose a method to host your skill's backend resources:**
    **Alexa-hosted (Node.js)** → **Next**
-   * Se pedir a região da hospedagem, use a padrão (**US East / N. Virginia**).
+   * Se pedir a região da hospedagem, use a padrão (**US East / N. Virginia**) — é a
+     recomendada para **Portuguese (BR)**.
+   * ⚠️ **Escolha "Alexa-hosted (Node.js)", não "Provision your own".** Só a Alexa-hosted tem
+     o editor de código dentro do Console (Parte 6). Se você já criou a skill como
+     *Provision your own*, **não recrie**: use a **Opção 0** da Parte 6 para converter.
 6. **Choose a template:** **Start from scratch** → **Create Skill**
 7. Aguarde o "Preparing your skill…" (uns 30 s).
 
@@ -210,6 +214,25 @@ pedido pela Alexa na primeira vez que ele usar o recurso (Parte 7, item 4).
 
 ---
 ## PARTE 6 — Colar o código da skill (Lambda)
+
+### Opção 0 — se o menu **Code** mostrar *"only works with an Alexa-hosted skill"*
+
+Essa mensagem (com o botão azul **Convert to Alexa-hosted**) significa que a skill foi criada
+como **Provision your own** (backend próprio) em vez de **Alexa-hosted**. **Não precisa recriar
+a skill**: o Console converte.
+
+1. Na própria página **Code**, clique em **Convert to Alexa-hosted**.
+2. Escolha a região **US East (N. Virginia)** — é a recomendada para **Portuguese (BR)**.
+3. Confirme a conversão e aguarde ~2 min (*"Preparing your skill…"*).
+4. O que acontece: a Amazon cria a hospedagem (Lambda + S3 + repositório) na sua conta de
+   desenvolvedor e passa o endpoint da skill a apontar para ela. O **modelo de interação
+   (Build)** e a **ficha da loja (Distribution)** continuam intactos — só o backend muda.
+5. Se você já tinha uma Lambda sua (AWS), o ARN antigo é substituído — anote-o se precisar
+   voltar depois. É reversível: **Code → Use Alexa hosted endpoint** reativa a hospedagem da
+   Amazon, e você pode informar o ARN antigo novamente no endpoint da skill.
+6. Recarregue a página (**Ctrl+F5**; se ainda não aparecer o editor, saia e entre de novo no
+   Console — a conversão leva alguns minutos para propagar). Agora aparecem `index.js`,
+   `util.js` e `package.json` → siga a **Opção 1** abaixo.
 
 ### Opção 1 — pelo editor do Console (recomendada, sem instalar nada)
 
@@ -408,6 +431,8 @@ Na pasta `c:\Users\Pichau\OneDrive\Documentos\TesteIA\skill-timeboss`:
 | "Tive um problema para acessar os dados" | erro na Lambda (site fora do ar, etc.) | **Code → Logs** no Console (CloudWatch) para ver o erro |
 | Build do modelo falha | JSON copiado incompleto | cole o `pt-BR.json` inteiro novamente |
 | A página do GitHub dá 404 | Pages não publicado ou pasta errada | Settings → Pages: branch `main` + pasta **`/docs`**; espere 2 min |
+| **Code** diz *"The code editor only works with an Alexa-hosted skill"* | skill criada como *Provision your own* | clique em **Convert to Alexa-hosted** → região **US East (N. Virginia)** (veja a Opção 0 da Parte 6) |
+| Depois de *Deploy* o editor volta ao template | *Deploy* sem *Save* ou conversão incompleta | confira os 5 arquivos na lista e clique **Deploy** só depois de salvar |
 
 ---
 
@@ -416,6 +441,7 @@ Na pasta `c:\Users\Pichau\OneDrive\Documentos\TesteIA\skill-timeboss`:
 - [ ] Páginas publicadas: `privacy-policy.html` e `terms-of-use.html` abrindo no navegador
 - [ ] `node tools\publish-setup.js --user ... --email ...` executado → **30 ok, 0 falhas**, sem `[AVISO]`
 - [ ] Skill criada (Custom / **pt-BR** / Alexa-hosted Node.js)
+- [ ] Se o **Code** pedir *"Convert to Alexa-hosted"*, conversão feita (US East / N. Virginia)
 - [ ] `pt-BR.json` colado → **Save Model** → **Build successful**
 - [ ] **Permissions → Reminders** ligado
 - [ ] `index.js`, `datasource.js`, `reminders.js`, `timeutil.js`, `schedule.js` no editor → **Deploy** ok
