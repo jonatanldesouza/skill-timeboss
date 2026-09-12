@@ -234,6 +234,13 @@ function slotObj(map) {
     ok('URLs de privacidade/termos preenchidas', true);
   }
 
+  const bundle = require(path.join(__dirname, 'bundle-hosted'));
+  ok(
+    'arquivo unico do deploy em sincronia (lambda\\bundle\\index.js)',
+    bundle.atual() === bundle.gerar(),
+    'rode "node tools\\bundle-hosted.js"'
+  );
+
   console.log('\n===== RESULTADO: ' + pass + ' ok, ' + fail + ' falha(s) =====');
   process.exit(fail ? 1 : 0);
 })().catch((e) => {

@@ -53,6 +53,10 @@ Para trocar, edite `invocationName` em `skill-package/interactionModels/custom/p
 > `node tools\check-deploy.js` no projeto e compare com **Code → Logs** no Console, onde a linha
 > `ERRO NA SKILL [LaunchRequest]: …` mostra o motivo. Desde a versão atual a própria skill avisa
 > nesse caso: *"O código não está completo na aba Code do console da Alexa…"*.
+>
+> 🧩 **O jeito sem risco de colar errado:** `node tools\bundle-hosted.js` junta os 5 arquivos em
+> **um só** (`lambda\bundle\index.js`, 1383 linhas). Cole esse arquivo em `index.js` no Console e
+> não crie nenhum auxiliar — é o caminho recomendado no `PUBLICAR.md` (Parte 6).
 
 ---
 
@@ -83,13 +87,15 @@ skill-timeboss/
 │   ├── reminders.js      # cliente da Alexa Reminders REST API
 │   ├── timeutil.js       # data/hora no fuso do usuário (Intl)
 │   ├── schedule.js       # snapshot de emergência dos times
+│   ├── bundle/index.js   # GERADO: os 5 arquivos num só — é o que se cola no Console
 │   └── package.json
 ├── assets/icons/         # ícones 108x108 e 512x512 (exigidos na publicação)
 ├── docs/                 # política de privacidade + termos de uso (GitHub Pages)
 ├── tools/
 │   ├── make-icons.js     # gera os ícones em PNG (sem dependências)
 │   ├── selftest.js       # testes locais (sem Alexa)
-│   └── check-deploy.js   # confere os arquivos que vão para a aba Code do Console
+│   ├── check-deploy.js   # confere os arquivos que vão para a aba Code do Console
+│   └── bundle-hosted.js  # gera o arquivo único do deploy (lambda/bundle/index.js)
 ├── .gitignore
 └── README.md
 ```
@@ -127,8 +133,9 @@ cd skill-timeboss\lambda
 npm install                     # instala ask-sdk-core / ask-sdk-model
 
 cd ..
-node tools\selftest.js          # roda a bateria de testes (30 checagens)
+node tools\selftest.js          # roda a bateria de testes (31 checagens)
 node tools\check-deploy.js      # confere os arquivos que você cola na aba Code
+node tools\bundle-hosted.js     # gera o arquivo único do deploy (lambda/bundle/index.js)
 node tools\make-icons.js        # (re)gera assets/icons/icon-108.png e icon-512.png
 ```
 
@@ -139,11 +146,17 @@ Na última seção ele ainda confere o **pacote de publicação**: ícones com a
 dimensões certas, páginas legais, permissão de lembretes no manifest, locale
 `pt-BR` e se todo intent/slot do modelo tem handler no código.
 
-O `check-deploy.js` é o teste do **deploy manual**: lista os 5 arquivos da pasta `lambda\`
-com o número de linhas (para comparar com o que está colado na aba **Code** do Console),
-confere se cada módulo exporta o que o `index.js` usa e simula a invocação `abrir time boss`.
-É ele que pega o erro mais comum em skill Alexa-hosted: arquivo colado **vazio ou incompleto**,
-que faz a Alexa responder *"Tive um problema para acessar os dados do time boss"*.
+O `check-deploy.js` é o teste do **deploy manual**: lista os arquivos que vão para a aba **Code**
+com o número de linhas e a **última linha** de cada um (para comparar com o Console), confere se
+cada módulo exporta o que o `index.js` usa e simula a invocação `abrir time boss`. É ele que pega
+o erro mais comum em skill Alexa-hosted: arquivo colado **vazio ou incompleto**, que faz a Alexa
+responder *"Tive um problema para acessar os dados do time boss"*.
+
+O `bundle-hosted.js` é a defesa contra esse erro: gera `lambda\bundle\index.js`, um **arquivo
+único** com os 5 fontes dentro (mini CommonJS próprio, que resolve os `require('./x')`). No
+Console você cola só ele em `index.js` e deixa de existir arquivo auxiliar para ficar vazio. O
+`check-deploy.js` testa o bundle do jeito mais parecido com a nuvem: copia **apenas** esse arquivo
+para uma pasta vazia, roda a invocação `abrir time boss` lá e confere a resposta.
 
 > Observação: no Windows o `npm` em PowerShell pode ser bloqueado por
 > *Execution Policy*. Use `npm.cmd install`.
@@ -204,7 +217,7 @@ As duas páginas já estão prontas em `docs/`:
 
 ### Checklist de publicação
 
-- [ ] `node tools\selftest.js` → **0 falhas** (30 ok com as URLs já preenchidas)
+- [ ] `node tools\selftest.js` → **0 falhas** (31 ok com as URLs já preenchidas)
 - [ ] Ícones em `assets/icons/` (108×108 e 512×512) gerados
 - [ ] Páginas de privacidade/termos no ar (sem nenhum placeholder)
 - [ ] `privacyPolicyUrl` / `termsOfUseUrl` no `skill.json` apontando para as URLs públicas
