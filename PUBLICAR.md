@@ -3,6 +3,9 @@
 Guia na ordem, sem pular etapas. Tempo estimado: **40–60 minutos** de configuração
 + **1 a 3 dias úteis** de análise da Amazon.
 
+> Interface conferida na **versão atual do Console** (menu superior
+> **Build / Code / Test / Distribution / Certification / Analytics**).
+
 ## O que você vai precisar
 
 | Item | Onde conseguir | Custo |
@@ -28,6 +31,24 @@ Guia na ordem, sem pular etapas. Tempo estimado: **40–60 minutos** de configur
        v
 [ app Alexa / Echo ]  "Alexa, abrir time boss"
 ```
+
+### Mapa do Console (interface atual)
+
+O Console trocou o menu lateral por um **menu de cima** dentro da skill:
+
+| Menu de cima | Para que serve | Neste guia |
+|---|---|---|
+| **Build** | modelo de interação, permissões e endpoint | Partes 4 e 5 |
+| **Code** | editor + **Deploy** do backend (só em skill *Alexa-hosted*) | Parte 6 |
+| **Test** | simulador (*Development* ou *Live*) | Parte 7 |
+| **Distribution** | ficha da loja, ícones, privacidade e países | Parte 8 |
+| **Certification** | testes de validação e **Submit for review** | Parte 9 |
+| **Analytics** | métricas de uso (só se movimentam depois de publicada) | — |
+
+* Na **lista de skills** (tela inicial): **SKILL NAME**, **STATUS** e o dropdown **ACTIONS**
+  (com **Test**, **Distribute**…). Clique no **nome** para abrir a skill.
+* Dentro da skill, a **barra lateral esquerda do Build** tem os grupos **CUSTOM** (modelo,
+  `JSON Editor`, *Assets*) e **TOOLS** (**Permissions**, *Language settings*).
 
 ---
 
@@ -167,7 +188,9 @@ Para voltar atrás: `node tools\publish-setup.js --reset`
    **mesma conta Amazon do seu Echo / app Alexa** — é o que permite testar a skill no
    seu aparelho antes de publicar.
    * Primeira vez: aceite o contrato de desenvolvedor e preencha o perfil (nome, país).
-2. Clique em **Create Skill**.
+2. Na tela **Skills** (a lista inicial) clique em **Create Skill** (canto superior direito).
+   * A lista traz **SKILL NAME**, **STATUS** (Development / Live) e o dropdown **ACTIONS**
+     (com **Test**, **Distribute**…). Para reabrir uma skill, clique no **nome** dela.
 3. Preencha:
    * **Skill name:** `Time Boss Tio Leo` (é o nome exibido na loja)
    * **Choose a primary locale:** marque **Portuguese (BR)**
@@ -181,7 +204,8 @@ Para voltar atrás: `node tools\publish-setup.js --reset`
      o editor de código dentro do Console (Parte 6). Se você já criou a skill como
      *Provision your own*, **não recrie**: use a **Opção 0** da Parte 6 para converter.
 6. **Choose a template:** **Start from scratch** → **Create Skill**
-7. Aguarde o "Preparing your skill…" (uns 30 s).
+7. Aguarde o "Preparing your skill…" (uns 30 s). No fim o Console abre a skill já na
+   página **Build** — é daqui que saem as Partes 4 e 5 (veja o *Mapa do Console*).
 
 > ⚠️ O nome de invocação (o que você fala) é **"time boss"** e está no modelo. O
 > `Skill name` é só o rótulo da loja. Não precisa ser igual.
@@ -190,26 +214,34 @@ Para voltar atrás: `node tools\publish-setup.js --reset`
 
 ## PARTE 4 — Colar o modelo de interação (as falas)
 
-1. Menu de cima: **Build** → **Interaction Model** → **JSON Editor**.
-2. No editor: **Ctrl+A**, **Delete** (apaga o modelo de exemplo).
-3. Abra `skill-package\interactionModels\custom\pt-BR.json`, **Ctrl+A**, **Ctrl+C** e cole
+1. No **menu de cima** entre em **Build**.
+2. Na **barra lateral esquerda**, abra **CUSTOM → Interaction Model → JSON Editor**
+   (em algumas versões o **JSON Editor** aparece direto dentro de **CUSTOM**).
+3. No editor: **Ctrl+A**, **Delete** (apaga o modelo de exemplo).
+4. Abra `skill-package\interactionModels\custom\pt-BR.json`, **Ctrl+A**, **Ctrl+C** e cole
    no editor do Console.
-4. **Save Model** → aguarde *"Success! Your model was saved"*.
-5. **Build Model** (topo da página) → aguarde **"Build successful"** (1–2 min; pode
-   atualizar a página).
+5. Clique em **Save Model** → aguarde *"Success! Your model was saved"*.
+6. Clique em **Build Model** (ao lado de *Save Model*; em versões novas aparece como
+   **Build skill**) → aguarde **"Build successful"** (1–2 min; pode atualizar a página).
 
 > Erro de *"Invalid JSON"* = o conteúdo foi copiado pela metade. Copie de novo, inteiro.
+> Enquanto o build não termina, o Console avisa *"Interaction model is out of date"* — normal.
 
 ---
 
 ## PARTE 5 — Ligar a permissão de Lembretes
 
-1. No menu lateral abra **TOOLS** (canto inferior; em algumas versões é
-   **Build → Tools**) → **Permissions**.
-2. Localize **Reminders** e **ligue** o botão.
-3. Clique **Save** (aparece *"Your permissions have been saved"*).
+1. Em **Build**, na barra lateral esquerda, abra **TOOLS → Permissions**
+   (em versões novas o item aparece direto como **PERMISSIONS**).
+2. Localize **Reminders** e **ligue** o botão (o toggle fica verde).
+3. Clique em **Save** (aparece *"Your permissions have been saved"*).
 
-Isso permite que a skill crie/edite/apague lembretes. O **consentimento do usuário** é
+> Nessa mesma tela ficam **Timers**, **Lists** e o *Alexa Skill Messaging* (que só libera
+> Client Id/Secret — esta skill não usa).
+
+Isso permite que a skill crie/edite/apague lembretes (a permissão
+`alexa::alerts:reminders:skill:readwrite` já está no `skill.json` do projeto).
+O **consentimento** do usuário é
 pedido pela Alexa na primeira vez que ele usar o recurso (Parte 7, item 4).
 
 ---
@@ -236,8 +268,11 @@ a skill**: o Console converte.
 
 ### Opção 1 — pelo editor do Console (recomendada, sem instalar nada)
 
-1. Menu de cima: **Code**.
+1. No **menu de cima** entre em **Code** (essa página só oferece editor para skills
+   **custom** hospedadas na Amazon — *Alexa-hosted*).
 2. À esquerda aparecem os arquivos do template: `index.js`, `util.js`, `package.json`.
+   * O editor é no estilo VS Code: lista de arquivos à esquerda, código no meio e o botão
+     **Deploy** no topo à direita.
 3. **package.json** → em geral **não precisa mexer**: o template da Alexa-hosted já traz
    `ask-sdk-core` e `ask-sdk-model`, e o projeto não usa nenhuma outra dependência
    (`datasource.js` e `reminders.js` usam só o `https` nativo do Node).
@@ -269,6 +304,8 @@ a skill**: o Console converte.
    * `schedule.js`
 6. O `util.js` do template não é usado — pode apagar (botão direito → **Delete**) ou deixar.
 7. Clique em **Deploy** (canto superior direito) → aguarde **"Deployment successful"**.
+   * A aba **Logs** (parte de baixo da página) mostra o log do CloudWatch da função — é onde
+     você procura o erro quando a Alexa diz *"Tive um problema para acessar os dados"*.
 
 ### Opção 2 — pelo ASK CLI (avançado)
 
@@ -287,9 +324,11 @@ ask.cmd deploy        # envia skill-package/ + lambda/ de uma vez
 
 ## PARTE 7 — Testar antes de publicar
 
-1. Aba **Test** (menu de cima).
-2. Se aparecer *"Test is disabled for this skill"*, mude o dropdown **Off → Development**.
-3. Digite/fale na caixa do simulador:
+1. No **menu de cima** entre em **Test**.
+2. Se aparecer *"Test is disabled for this skill"*, mude o dropdown
+   **Skill testing is enabled in:** para **Development** (o mesmo ajuste aparece em
+   **lista de skills → ACTIONS → Test**).
+3. Digite ou fale na caixa do **Alexa Simulator**:
 
 | Você diz | Resposta esperada |
 |---|---|
@@ -303,9 +342,14 @@ ask.cmd deploy        # envia skill-package/ + lambda/ de uma vez
 | `atualiza os lembretes` | Relê a tabela do dia e recria os 24 lembretes do time |
 | `remove os lembretes do awell` | Apaga os lembretes daquele servidor |
 
+* No painel da direita ligue **Skill I/O** (JSON de entrada/saída), **Device Display** (a tela
+  do aparelho) e **Device Log** — é o que ajuda a achar o motivo quando a Alexa responde errado.
+
+
 4. **Permissão de lembretes:** no primeiro "me lembra…" a Alexa pede autorização e envia um
-   card; ele aparece na aba **Home** do próprio simulador (ou no app Alexa). Sem autorizar,
-   o lembrete **não** é criado.
+   **card de permissão** (no painel **Skill I/O** dá para ver o card no JSON da resposta);
+   quem autoriza é o **app Alexa** (aba **Home**, no celular). Sem autorizar, o lembrete
+   **não** é criado.
 5. **Conferir:** no app Alexa do celular → ícone de **Lembretes e alarmes** → devem aparecer
    os lembretes "Time Gama - Awell" (um para cada hora, no minuto 17).
 
@@ -315,9 +359,21 @@ ask.cmd deploy        # envia skill-package/ + lambda/ de uma vez
 ---
 ## PARTE 8 — Preencher a ficha da loja (Distribution)
 
-Menu de cima → **Distribution**.
+No **menu de cima** entre em **Distribution**. A página tem um **menu no topo esquerdo**
+para trocar de seção, e cada seção tem o seu próprio botão **Save**:
 
-### 8.1 Skill preview (textos — copie e cole)
+| Seção (topo esquerdo) | O que preencher | Neste guia |
+|---|---|---|
+| **Skill Preview** | idioma da ficha (**Portuguese (BR)**) | — |
+| **Primary Details** | nome, resumo, descrição, frases de exemplo, palavras-chave, categoria | 8.1 |
+| **Media Details** | ícones 108 e 512 (+ imagens/vídeo opcionais) | 8.2 |
+| **Privacy & Compliance** | URLs de privacidade e termos, questionário e instruções de teste | 8.3 |
+| **Availability** | países em que a skill fica disponível (**Brazil**) | 8.3 |
+
+> O **nome** da skill não pode ser alterado depois de publicada (nem o nome de invocação):
+> confira tudo antes de enviar para certificação.
+
+### 8.1 Primary Details (textos — copie e cole)
 
 * **Skill name:** `Time Boss Tio Leo`
 * **Summary:** `Veja os times boss do Priston Tale Brasil e receba lembretes no minuto de cada time.`
@@ -337,7 +393,7 @@ Voce tambem pode criar lembretes: "me lembra do time Gama do Awell" e a Alexa av
   3. `me lembra do time Gama do Awell`
 * **Keywords:** `priston tale`, `time boss`, `boss`, `servidor`, `tio leo`
 
-### 8.2 Images (ícones — obrigatórios)
+### 8.2 Media Details (ícones — obrigatórios)
 
 | Campo | Arquivo |
 |---|---|
@@ -346,7 +402,7 @@ Voce tambem pode criar lembretes: "me lembra do time Gama do Awell" e a Alexa av
 
 Se o Console reclamar do arquivo, rode `node tools\make-icons.js` para gerar de novo.
 
-### 8.3 Privacy & Compliance
+### 8.3 Privacy & Compliance + Availability
 
 * **Privacy Policy URL:**
   `https://jonatanldesouza.github.io/skill-timeboss/privacy-policy.html`
@@ -372,16 +428,23 @@ Se o Console reclamar do arquivo, rode `node tools\make-icons.js` para gerar de 
 
 ## PARTE 9 — Enviar para certificação
 
-1. Na página **Distribution**, confira se **nenhum** campo aparece com aviso (⚠): Name,
-   Summary, Description, Example phrases, ícones, Privacy Policy, Terms of Use,
-   Availability e Export compliance precisam estar completos.
-2. Clique em **Submit for Review** (em algumas versões: aba **Certification** →
-   *Submit for review*).
-3. Marque as declarações ("testei a skill", "as informações são verdadeiras") e confirme.
-4. A Amazon responde em **1 a 3 dias úteis** no e-mail da conta. Enquanto isso, sua skill
-   continua funcionando **para você** no modo Development.
-5. **Se reprovar:** o e-mail diz o motivo. Corrija, faça *Build Model* / *Deploy* de novo e
-   reenvie. Motivos mais comuns:
+1. No **menu de cima** entre em **Certification** e abra a aba **Submission**.
+2. Clique no botão de validação (**Run validation tests** / seção *Validate your skill*) e
+   espere o resultado: ele acusa erro de modelo, endpoint, ícone ou ficha antes de a Amazon
+   olhar.
+3. Revise o **submission checklist** — são os mesmos itens que o time de certificação testa.
+4. Confira que **nenhum** campo de **Distribution** está com aviso (⚠): nome, resumo,
+   descrição, frases de exemplo, ícones, Privacy Policy, Terms of Use, Availability e
+   Export compliance.
+5. Em **Publishing preference** escolha **Certify and publish now** (publica sozinha depois
+   de aprovada) ou **Certify now and Publish Later** (você decide quando publicar).
+6. Escreva uma **Version message** (ex.: `v1 - tabela de times e lembretes`) e clique em
+   **Submit for review**.
+7. A Amazon responde em **1 a 3 dias úteis** no e-mail da conta e o **STATUS** na lista de
+   skills muda (*In Review → Certified → Live*). Enquanto isso, sua skill continua
+   funcionando **para você** no modo Development.
+8. **Se reprovar:** o e-mail diz o motivo. Corrija, faça *Save Model* / *Build Model* e
+   *Deploy* de novo e reenvie. Motivos mais comuns:
    * URL de privacidade/termos fora do ar (teste antes no navegador);
    * ícone com tamanho errado;
    * fala de exemplo que não existe no modelo de interação.
@@ -393,6 +456,10 @@ Se o Console reclamar do arquivo, rode `node tools\make-icons.js` para gerar de 
 1. Abra o **app Alexa** no celular (logado na **mesma conta** do Console).
 2. **Mais → Skills e Jogos → Suas Skills → aba "Dev"**.
 3. Toque em **Time Boss Tio Leo → Usar/Habilitar** e aceite a permissão de lembretes.
+   * Se a skill não aparecer ali, volte ao Console → **Test** e confirme o dropdown
+     **Skill testing is enabled in:** = **Development**.
+
+
 4. Fale:
    * *"Alexa, abrir time boss"*
    * *"times boss do awell"*
@@ -433,6 +500,11 @@ Na pasta `c:\Users\Pichau\OneDrive\Documentos\TesteIA\skill-timeboss`:
 | A página do GitHub dá 404 | Pages não publicado ou pasta errada | Settings → Pages: branch `main` + pasta **`/docs`**; espere 2 min |
 | **Code** diz *"The code editor only works with an Alexa-hosted skill"* | skill criada como *Provision your own* | clique em **Convert to Alexa-hosted** → região **US East (N. Virginia)** (veja a Opção 0 da Parte 6) |
 | Depois de *Deploy* o editor volta ao template | *Deploy* sem *Save* ou conversão incompleta | confira os 5 arquivos na lista e clique **Deploy** só depois de salvar |
+| Não acho o menu **Tools/Permissions** | a barra lateral mudou nas versões novas | **Build** → barra lateral esquerda → **TOOLS → Permissions** (às vezes aparece direto como **PERMISSIONS**) |
+| *"Test is disabled for this skill"* | teste desligado para a skill | aba **Test** → dropdown **Skill testing is enabled in:** → **Development** |
+| **Certification** não deixa enviar | falta rodar a validação ou há aviso na ficha | rode os testes na própria **Certification** e limpe os avisos em **Distribution** |
+| Quero mudar o nome de invocação depois de publicado | a Amazon não permite em skill publicada | crie uma skill nova e remova a antiga |
+| **Analytics** mostra tudo zerado | a skill ainda não tem clientes | normal em Development; os números vêm depois de publicada |
 
 ---
 
@@ -442,13 +514,13 @@ Na pasta `c:\Users\Pichau\OneDrive\Documentos\TesteIA\skill-timeboss`:
 - [ ] `node tools\publish-setup.js --user ... --email ...` executado → **30 ok, 0 falhas**, sem `[AVISO]`
 - [ ] Skill criada (Custom / **pt-BR** / Alexa-hosted Node.js)
 - [ ] Se o **Code** pedir *"Convert to Alexa-hosted"*, conversão feita (US East / N. Virginia)
-- [ ] `pt-BR.json` colado → **Save Model** → **Build successful**
-- [ ] **Permissions → Reminders** ligado
-- [ ] `index.js`, `datasource.js`, `reminders.js`, `timeutil.js`, `schedule.js` no editor → **Deploy** ok
-- [ ] Testado no simulador: consulta de times ✔ / lembrete criado ✔
-- [ ] Ícones 108 e 512 enviados em **Distribution → Images**
-- [ ] URLs de privacidade/termos preenchidas em **Distribution → Privacy & Compliance**
-- [ ] **Submit for Review** enviado
+- [ ] `pt-BR.json` colado em **Build → CUSTOM → Interaction Model → JSON Editor** → **Save Model** → **Build successful**
+- [ ] **Build → TOOLS → Permissions → Reminders** ligado
+- [ ] `index.js`, `datasource.js`, `reminders.js`, `timeutil.js`, `schedule.js` na aba **Code** → **Deploy** ok
+- [ ] Testado na aba **Test** (*Skill testing is enabled in:* = **Development**): times ✔ / lembrete ✔
+- [ ] Ícones 108 e 512 enviados em **Distribution → Media Details**
+- [ ] Ficha completa em **Distribution** (Primary Details, Media Details, Privacy & Compliance, Availability)
+- [ ] Validação rodada e **Submit for review** enviado em **Certification → Submission**
 
 > Este guia cobre o caminho completo. O outro arquivo de referência técnica do projeto é o
 > `README.md` (arquitetura, limitações da API de lembretes e como rodar os testes).

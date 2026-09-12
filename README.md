@@ -134,19 +134,20 @@ dimensões certas, páginas legais, permissão de lembretes no manifest, locale
    > skill foi criada como *Provision your own*: clique em **Convert to Alexa-hosted** e
    > escolha a região **US East (N. Virginia)** (recomendada para pt-BR) — veja a *Opção 0* da
    > Parte 6 do `PUBLICAR.md`.
-2. Em **Build → Interaction Model → JSON Editor**, cole o conteúdo de
+2. Em **Build → CUSTOM → Interaction Model → JSON Editor**, cole o conteúdo de
    `skill-package/interactionModels/custom/pt-BR.json` e clique **Save Model → Build Model**.
-3. Em **TOOLS → Permissions**, ligue **Reminders**.
+3. Em **Build → TOOLS → Permissions**, ligue **Reminders**.
 4. Em **Code**, substitua o conteúdo de `lambda/` pelos arquivos deste projeto
    (mantenha o `package.json`), e clique **Deploy**.
 5. Em **Test**, habilite o teste em *Development* e experimente as falas da tabela acima.
-6. Em **Distribution → Images**, envie os dois ícones já gerados:
+6. Em **Distribution → Media Details**, envie os dois ícones já gerados:
    `assets/icons/icon-108.png` (pequeno) e `assets/icons/icon-512.png` (grande).
    Para refazer o desenho, rode `node tools\make-icons.js`.
 7. Em **Distribution → Privacy & Compliance**, informe as URLs das páginas de
    `docs/` (veja abaixo) e responda o questionário (não coleta dados pessoais,
    não é para crianças, sem compras e sem anúncios).
-8. Teste tudo no **Test (Development)** e clique em **Submit for Review**.
+8. Teste tudo em **Test** (*Skill testing is enabled in:* = **Development**) e envie em
+   **Certification → Submission** (**Submit for review**).
 
 ### Publicar a política de privacidade e os termos (grátis, via GitHub Pages)
 
