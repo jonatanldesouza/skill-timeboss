@@ -330,6 +330,19 @@ ask.cmd deploy        # envia skill-package/ + lambda/ de uma vez
    **lista de skills → ACTIONS → Test**).
 3. Digite ou fale na caixa do **Alexa Simulator**:
 
+> ⚠️ **A primeira frase precisa invocar a skill.** Digite **`abrir time boss`** primeiro
+> (isso gera o **LaunchRequest**) e depois vá dizendo as frases da tabela **na mesma sessão**.
+> * As frases da tabela são **sample utterances** do modelo (`pt-BR.json`), não comandos de
+>   abertura: se você digitar `times boss do awell` **sem** abrir a skill antes, o pedido não
+>   entra na skill e quem responde é a própria Alexa. No teste real do projeto apareceu uma
+>   resposta do **Amazon Music** (*"Não consegui encontrar essa música…"*), porque a frase
+>   foi entendida como pedido de música.
+> * Cuidado com o singular: o nome de invocação é **`time boss`** (sem "s"). Digitando
+>   `times boss …` a Alexa não encontra a skill.
+> * Formato *one-shot* (tudo em uma frase), se quiser testar:
+>   `pergunte ao time boss os times do awell` (verbo de invocação + uma das falas do modelo).
+>   Se o simulador não aceitar, volte ao caminho seguro: abrir a skill primeiro.
+
 | Você diz | Resposta esperada |
 |---|---|
 | `abrir time boss` | Abertura da skill + pedido do servidor |
@@ -493,6 +506,8 @@ Na pasta `c:\Users\Pichau\OneDrive\Documentos\TesteIA\skill-timeboss`:
 |---|---|---|
 | A skill não aparece no app | está em *Development* | app → Skills e Jogos → Suas Skills → **Dev** |
 | "Não entendi a fala" | a frase não está no modelo | use uma das falas da Parte 7 ou adicione o `sample` no JSON e *Build Model* |
+| A Alexa responde com **música / Amazon Music** em vez da skill | a frase foi dita **sem abrir a skill** antes (falta o nome de invocação) ou com typo (*times* em vez de *time*) | diga **`abrir time boss`** primeiro e só depois a fala da Parte 7, dentro da sessão |
+| Ao abrir, a Alexa **não conhece a skill** | o modelo não foi compilado no Console | **Build → CUSTOM → Interaction Model → JSON Editor** → **Save Model** → **Build Model** (espere *Build successful*) |
 | Lembrete não é criado | permissão negada ou fora de sessão | aceite o card de permissão; sempre fale dentro da sessão da skill |
 | Horários desatualizados | cache de 30 min dos dados do site | *"Alexa, pede pra atualizar os lembretes"* |
 | "Tive um problema para acessar os dados" | erro na Lambda (site fora do ar, etc.) | **Code → Logs** no Console (CloudWatch) para ver o erro |
@@ -518,6 +533,7 @@ Na pasta `c:\Users\Pichau\OneDrive\Documentos\TesteIA\skill-timeboss`:
 - [ ] **Build → TOOLS → Permissions → Reminders** ligado
 - [ ] `index.js`, `datasource.js`, `reminders.js`, `timeutil.js`, `schedule.js` na aba **Code** → **Deploy** ok
 - [ ] Testado na aba **Test** (*Skill testing is enabled in:* = **Development**): times ✔ / lembrete ✔
+- [ ] No simulador, **`abrir time boss`** abre a skill **antes** das falas de consulta (elas são *sample utterances* e só valem dentro da sessão)
 - [ ] Ícones 108 e 512 enviados em **Distribution → Media Details**
 - [ ] Ficha completa em **Distribution** (Primary Details, Media Details, Privacy & Compliance, Availability)
 - [ ] Validação rodada e **Submit for review** enviado em **Certification → Submission**

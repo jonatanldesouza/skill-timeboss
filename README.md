@@ -35,6 +35,12 @@ Ela faz duas coisas:
 Nome de invocação: **"time boss"** (ex.: *"Alexa, abrir time boss"*).
 Para trocar, edite `invocationName` em `skill-package/interactionModels/custom/pt-BR.json`.
 
+> 💡 As falas da tabela acima são *sample utterances* do modelo: elas só funcionam **com a
+> skill aberta**. Sem o nome de invocação o pedido não entra na skill e quem responde é a
+> própria Alexa — no nosso teste real isso apareceu como resposta do **Amazon Music**
+> (*"Não consegui encontrar essa música…"*), porque `times boss do awell` foi lido como pedido
+> de música. Abra primeiro com **`abrir time boss`** e atenção ao singular: **time boss**.
+
 ---
 
 ## Fontes de dados (engenharia reversa do site)
@@ -139,7 +145,9 @@ dimensões certas, páginas legais, permissão de lembretes no manifest, locale
 3. Em **Build → TOOLS → Permissions**, ligue **Reminders**.
 4. Em **Code**, substitua o conteúdo de `lambda/` pelos arquivos deste projeto
    (mantenha o `package.json`), e clique **Deploy**.
-5. Em **Test**, habilite o teste em *Development* e experimente as falas da tabela acima.
+5. Em **Test**, habilite o teste em *Development*, diga **`abrir time boss`** para abrir a skill
+   e só depois experimente as falas da tabela acima (sem abrir a skill antes, a frase não entra
+   na skill e responde a própria Alexa — veja a nota em *"Como o usuário fala com a skill"*).
 6. Em **Distribution → Media Details**, envie os dois ícones já gerados:
    `assets/icons/icon-108.png` (pequeno) e `assets/icons/icon-512.png` (grande).
    Para refazer o desenho, rode `node tools\make-icons.js`.
