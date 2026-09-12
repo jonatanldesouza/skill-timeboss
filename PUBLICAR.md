@@ -339,6 +339,13 @@ ask.cmd deploy        # envia skill-package/ + lambda/ de uma vez
 >   foi entendida como pedido de música.
 > * Cuidado com o singular: o nome de invocação é **`time boss`** (sem "s"). Digitando
 >   `times boss …` a Alexa não encontra a skill.
+> * **Nunca cole** JSON, trecho de anotação ou nome de intent na caixa do simulador: ela só
+>   aceita o que uma pessoa **fala**. Num teste do projeto foi colado um texto terminando em
+>   *"consultartimesintent sample da linha quinze do modelo"* e a Alexa respondeu
+>   *"Não sei como posso ajudar."* — o pedido não entrou na skill.
+> * **Como saber se o pedido entrou na skill:** a abertura responde *"Bem-vindo ao Time Boss!…"*
+>   e um erro dentro da skill responde *"Não entendi. Tente: times boss do Awell…"* (`index.js`).
+>   Se aparecer *"Não sei como posso ajudar."*, é fala da própria Alexa: a skill **não abriu**.
 > * Formato *one-shot* (tudo em uma frase), se quiser testar:
 >   `pergunte ao time boss os times do awell` (verbo de invocação + uma das falas do modelo).
 >   Se o simulador não aceitar, volte ao caminho seguro: abrir a skill primeiro.
@@ -354,6 +361,28 @@ ask.cmd deploy        # envia skill-package/ + lambda/ de uma vez
 | `quais lembretes eu tenho` | Lista os lembretes criados |
 | `atualiza os lembretes` | Relê a tabela do dia e recria os 24 lembretes do time |
 | `remove os lembretes do awell` | Apaga os lembretes daquele servidor |
+
+### Roteiro de teste (copie e cole uma linha por vez)
+
+```text
+abrir time boss
+times boss do awell
+que horas e o time gama no awell
+quais os servidores
+me lembra do time gama do awell
+quais lembretes eu tenho
+remove os lembretes do awell
+parar
+```
+
+* Espere a resposta de cada linha antes de digitar a próxima — é assim que a sessão continua aberta.
+* As falas do modelo (`pt-BR.json`) estão **sem acento** (`que horas e o time {time}`); a Alexa
+  normaliza o acento, mas se alguma frase falhar, digite exatamente como está acima.
+* Se a **primeira** linha (*`abrir time boss`*) não responder *"Bem-vindo ao Time Boss!…"*, o
+  modelo não está compilado no Console — use a linha *"Ao abrir, a Alexa não conhece a skill"*
+  em **Problemas comuns**.
+* Tire uma foto do painel **Skill I/O** se algo der errado: ali aparece o JSON do `LaunchRequest`
+  e do `IntentRequest`, provando se o pedido chegou na Lambda.
 
 * No painel da direita ligue **Skill I/O** (JSON de entrada/saída), **Device Display** (a tela
   do aparelho) e **Device Log** — é o que ajuda a achar o motivo quando a Alexa responde errado.
@@ -507,6 +536,7 @@ Na pasta `c:\Users\Pichau\OneDrive\Documentos\TesteIA\skill-timeboss`:
 | A skill não aparece no app | está em *Development* | app → Skills e Jogos → Suas Skills → **Dev** |
 | "Não entendi a fala" | a frase não está no modelo | use uma das falas da Parte 7 ou adicione o `sample` no JSON e *Build Model* |
 | A Alexa responde com **música / Amazon Music** em vez da skill | a frase foi dita **sem abrir a skill** antes (falta o nome de invocação) ou com typo (*times* em vez de *time*) | diga **`abrir time boss`** primeiro e só depois a fala da Parte 7, dentro da sessão |
+| No simulador a Alexa diz *"Não sei como posso ajudar."* | o pedido **não entrou** na skill (faltou o nome de invocação) ou foi colado um texto que ninguém fala (JSON, anotação) | diga **`abrir time boss`**; se a resposta não for *"Bem-vindo ao Time Boss!…"*, compile o modelo (*Save Model* → *Build Model*) |
 | Ao abrir, a Alexa **não conhece a skill** | o modelo não foi compilado no Console | **Build → CUSTOM → Interaction Model → JSON Editor** → **Save Model** → **Build Model** (espere *Build successful*) |
 | Lembrete não é criado | permissão negada ou fora de sessão | aceite o card de permissão; sempre fale dentro da sessão da skill |
 | Horários desatualizados | cache de 30 min dos dados do site | *"Alexa, pede pra atualizar os lembretes"* |
@@ -533,7 +563,7 @@ Na pasta `c:\Users\Pichau\OneDrive\Documentos\TesteIA\skill-timeboss`:
 - [ ] **Build → TOOLS → Permissions → Reminders** ligado
 - [ ] `index.js`, `datasource.js`, `reminders.js`, `timeutil.js`, `schedule.js` na aba **Code** → **Deploy** ok
 - [ ] Testado na aba **Test** (*Skill testing is enabled in:* = **Development**): times ✔ / lembrete ✔
-- [ ] No simulador, **`abrir time boss`** abre a skill **antes** das falas de consulta (elas são *sample utterances* e só valem dentro da sessão)
+- [ ] No simulador, **`abrir time boss`** abre a skill **antes** das falas de consulta (elas são *sample utterances* e só valem dentro da sessão) e responde *"Bem-vindo ao Time Boss!…"* (use o roteiro da Parte 7, sem colar JSON nem anotações)
 - [ ] Ícones 108 e 512 enviados em **Distribution → Media Details**
 - [ ] Ficha completa em **Distribution** (Primary Details, Media Details, Privacy & Compliance, Availability)
 - [ ] Validação rodada e **Submit for review** enviado em **Certification → Submission**

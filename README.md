@@ -40,6 +40,12 @@ Para trocar, edite `invocationName` em `skill-package/interactionModels/custom/p
 > própria Alexa — no nosso teste real isso apareceu como resposta do **Amazon Music**
 > (*"Não consegui encontrar essa música…"*), porque `times boss do awell` foi lido como pedido
 > de música. Abra primeiro com **`abrir time boss`** e atenção ao singular: **time boss**.
+>
+> Dois sinais para saber se o pedido **entrou** na skill: a abertura responde *"Bem-vindo ao Time
+> Boss!…"* e um erro dentro da skill responde *"Não entendi. Tente: times boss do Awell…"*
+> (`lambda/index.js`). Se aparecer *"Não sei como posso ajudar."*, é fala da própria Alexa — a
+> skill não abriu. E na caixa do simulador digite **o que uma pessoa fala**: não cole JSON nem
+> anotações (o `PUBLICAR.md` tem um roteiro copiável na Parte 7).
 
 ---
 
