@@ -15,7 +15,22 @@
  */
 
 const https = require('https');
-const { FALLBACK_SERVERS, SERVER_ORDER, FALLBACK_DATE } = require('./schedule');
+
+/**
+ * Snapshot local (schedule.js). O import e defensivo de proposito: no
+ * Alexa-hosted o codigo e colado A MAO na aba Code do Console e um arquivo
+ * vazio derruba o Lambda inteiro ("Tive um problema para acessar os dados...").
+ * Se isso acontecer, registramos no CloudWatch e seguimos de pe.
+ */
+let schedule = {};
+try {
+  schedule = require('./schedule');
+} catch (e) {
+  console.error('[datasource] schedule.js nao carregou:', (e && e.message) || e);
+}
+const FALLBACK_SERVERS = schedule.FALLBACK_SERVERS || {};
+const SERVER_ORDER = schedule.SERVER_ORDER || [];
+const FALLBACK_DATE = schedule.FALLBACK_DATE || null;
 
 const SCRIPT3_URL = 'https://tioleobpt.com.br/js/script3.js';
 const BOSSES_URL = 'https://tioleobpt.com.br/api/bosses.php';
@@ -144,6 +159,14 @@ function extractServersFromScript(scriptText) {
  * Ordem de tentativa: cache fresco -> script3.js -> ultimo cache -> snapshot.
  */
 async function getServers() {
+  const result = await fetchServers();
+  console.log(
+    '[datasource] fonte=' + result.source + ' servidores=' + Object.keys(result.servers || {}).join(', ')
+  );
+  return result;
+}
+
+async function fetchServers() {
   const now = Date.now();
   if (cache.servers && now - cache.at < CACHE_TTL_MS) {
     return { servers: cache.servers, source: 'cache', updatedAt: cache.at };
@@ -192,7 +215,7 @@ function normalizeToken(s) {
 
 /** Resolve o nome do servidor ignorando caixa/acentos (ex.: "awell" -> "Awell"). */
 function resolveServer(servers, value) {
-  if (!value) return null;
+  if (!value || !servers) return null;
   const target = normalizeToken(value);
   for (const name of Object.keys(servers)) {
     if (normalizeToken(name) === target) return name;
@@ -202,7 +225,7 @@ function resolveServer(servers, value) {
 
 /** Resolve o nome do time dentro de um servidor (ignora caixa/acentos). */
 function resolveTeam(teamMap, value) {
-  if (!value) return null;
+  if (!value || !teamMap) return null;
   const target = normalizeToken(value);
   for (const name of Object.keys(teamMap)) {
     if (normalizeToken(name) === target) return name;
@@ -214,14 +237,14 @@ function resolveTeam(teamMap, value) {
 function sortedTeams(teamMap) {
   // Sort estavel: empate de minuto mantem a ordem original do site
   // (ex.: Awell -> Gama 17 antes de Delta 17, igual a pagina).
-  return Object.entries(teamMap)
+  return Object.entries(teamMap || {})
     .map(([time, minute]) => ({ time, minute: parseInt(minute, 10) }))
     .sort((a, b) => a.minute - b.minute);
 }
 
 /** Ordena os nomes de servidores conforme a ordem oficial do site. */
 function orderedServers(servers) {
-  const names = Object.keys(servers);
+  const names = Object.keys(servers || {});
   const ordered = SERVER_ORDER.filter((s) => names.includes(s));
   const extra = names.filter((s) => !SERVER_ORDER.includes(s)).sort();
   return ordered.concat(extra);

@@ -78,6 +78,13 @@ const LaunchRequestHandler = {
   async handle(handlerInput) {
     const { servers } = await ds.getServers();
     const lista = joinPt(ds.orderedServers(servers));
+    if (!lista) {
+      return say(
+        handlerInput,
+        'Bem-vindo ao ' + SKILL_NAME + '! Estou sem a tabela de times agora. Tente de novo em instantes.',
+        'Tente de novo em instantes.'
+      );
+    }
     return say(
       handlerInput,
       'Bem-vindo ao ' + SKILL_NAME + '! ' +
@@ -518,12 +525,37 @@ const SessionEndedRequestHandler = {
   },
 };
 
+/**
+ * Erros que significam "faltou colar um arquivo no editor do Console": o Node
+ * carrega o arquivo vazio sem reclamar, mas a funcao chamada nao existe.
+ */
+const CODIGO_INCOMPLETO = /is not a function|Cannot find module|MODULE_NOT_FOUND/;
+
 const ErrorHandler = {
   canHandle() {
     return true;
   },
   handle(handlerInput, error) {
-    console.error('ERRO NA SKILL:', error && (error.stack || error.message || error));
+    const tipo = Alexa.getRequestType(handlerInput.requestEnvelope) || 'desconhecido';
+    const detalhe = String((error && error.message) || error || '');
+    console.error('ERRO NA SKILL [' + tipo + ']:', error && (error.stack || error.message || error));
+
+    if (CODIGO_INCOMPLETO.test(detalhe)) {
+      return handlerInput.responseBuilder
+        .speak(
+          'O código não está completo na aba Code do console da Alexa. ' +
+            'Confira os arquivos auxiliares e clique em Deploy.'
+        )
+        .withSimpleCard(
+          SKILL_NAME + ' - código incompleto',
+          'O Lambda não encontrou: ' + detalhe + '. ' +
+            'Na aba Code, confira se estes arquivos existem e estão completos: ' +
+            'datasource.js, reminders.js, timeutil.js e schedule.js. ' +
+            'Cole o conteúdo deles e clique em Deploy.'
+        )
+        .getResponse();
+    }
+
     return handlerInput.responseBuilder
       .speak('Tive um problema para acessar os dados do time boss. Tente de novo em instantes.')
       .getResponse();

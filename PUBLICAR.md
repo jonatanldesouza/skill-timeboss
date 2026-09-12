@@ -302,10 +302,21 @@ a skill**: o Console converte.
    * `reminders.js`
    * `timeutil.js`
    * `schedule.js`
+   > **Confira se cada arquivo ficou completo** (cole e role até a última linha). Arquivo que
+   > salva vazio ou pela metade **não dá erro na hora**: a skill sobe e só quebra no teste, com
+   > *"Tive um problema para acessar os dados do time boss"*. Para ver o número de linhas de
+   > cada arquivo aqui do projeto (e comparar com o Console), rode
+   > `node tools\check-deploy.js`.
 6. O `util.js` do template não é usado — pode apagar (botão direito → **Delete**) ou deixar.
 7. Clique em **Deploy** (canto superior direito) → aguarde **"Deployment successful"**.
    * A aba **Logs** (parte de baixo da página) mostra o log do CloudWatch da função — é onde
      você procura o erro quando a Alexa diz *"Tive um problema para acessar os dados"*.
+     A linha `ERRO NA SKILL [LaunchRequest]: …` traz o motivo; por exemplo,
+     `ds.getServers is not a function` significa que o `datasource.js` não foi colado inteiro.
+   * Se faltar um arquivo, a **própria skill avisa no simulador**: *"O código não está completo
+     na aba Code do console da Alexa…"* — complete o arquivo e clique em **Deploy** de novo.
+   * O log também mostra `[datasource] fonte=remoto` (site respondeu) ou `fonte=fallback`
+     (usou o snapshot do `schedule.js` porque o site não respondeu).
 
 ### Opção 2 — pelo ASK CLI (avançado)
 
@@ -522,6 +533,7 @@ Na pasta `c:\Users\Pichau\OneDrive\Documentos\TesteIA\skill-timeboss`:
 | Comando | Para que serve |
 |---|---|
 | `node tools\selftest.js` | Roda os 30 testes (inclui as checagens de publicação) |
+| `node tools\check-deploy.js` | Confere os 5 arquivos que vão para a aba **Code** (linhas, exports e a abertura da skill) |
 | `node tools\publish-setup.js --user X --email Y` | Grava as URLs e o e-mail de contato |
 | `node tools\git-publish.js --user X --email Y` | Faz tudo do git: URLs + commit + remote (+ `--push`) |
 | `node tools\publish-setup.js --reset` | Volta aos placeholders |
@@ -540,7 +552,7 @@ Na pasta `c:\Users\Pichau\OneDrive\Documentos\TesteIA\skill-timeboss`:
 | Ao abrir, a Alexa **não conhece a skill** | o modelo não foi compilado no Console | **Build → CUSTOM → Interaction Model → JSON Editor** → **Save Model** → **Build Model** (espere *Build successful*) |
 | Lembrete não é criado | permissão negada ou fora de sessão | aceite o card de permissão; sempre fale dentro da sessão da skill |
 | Horários desatualizados | cache de 30 min dos dados do site | *"Alexa, pede pra atualizar os lembretes"* |
-| "Tive um problema para acessar os dados" | erro na Lambda (site fora do ar, etc.) | **Code → Logs** no Console (CloudWatch) para ver o erro |
+| "Tive um problema para acessar os dados" | erro na Lambda — na maioria das vezes **arquivo colado vazio/incompleto** na aba Code (também ocorre com o site fora do ar) | rode `node tools\check-deploy.js`, compare as linhas de cada arquivo com a aba **Code** e cole de novo o que estiver diferente → **Deploy**; o log (**Code → Logs**) mostra `ERRO NA SKILL [...]` com o motivo |
 | Build do modelo falha | JSON copiado incompleto | cole o `pt-BR.json` inteiro novamente |
 | A página do GitHub dá 404 | Pages não publicado ou pasta errada | Settings → Pages: branch `main` + pasta **`/docs`**; espere 2 min |
 | **Code** diz *"The code editor only works with an Alexa-hosted skill"* | skill criada como *Provision your own* | clique em **Convert to Alexa-hosted** → região **US East (N. Virginia)** (veja a Opção 0 da Parte 6) |
@@ -562,6 +574,7 @@ Na pasta `c:\Users\Pichau\OneDrive\Documentos\TesteIA\skill-timeboss`:
 - [ ] `pt-BR.json` colado em **Build → CUSTOM → Interaction Model → JSON Editor** → **Save Model** → **Build successful**
 - [ ] **Build → TOOLS → Permissions → Reminders** ligado
 - [ ] `index.js`, `datasource.js`, `reminders.js`, `timeutil.js`, `schedule.js` na aba **Code** → **Deploy** ok
+- [ ] `node tools\check-deploy.js` → **13 ok, 0 falhas** (nenhum arquivo colado vazio/incompleto)
 - [ ] Testado na aba **Test** (*Skill testing is enabled in:* = **Development**): times ✔ / lembrete ✔
 - [ ] No simulador, **`abrir time boss`** abre a skill **antes** das falas de consulta (elas são *sample utterances* e só valem dentro da sessão) e responde *"Bem-vindo ao Time Boss!…"* (use o roteiro da Parte 7, sem colar JSON nem anotações)
 - [ ] Ícones 108 e 512 enviados em **Distribution → Media Details**
